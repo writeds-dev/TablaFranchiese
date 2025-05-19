@@ -1,0 +1,26 @@
+image: node:20
+
+stages:
+  - build
+
+build_main:
+  stage: build
+  script:
+    - npm i --legacy-peer-deps
+    - npm run build
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - chmod 400 $PRIVATE_KEY
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - apt-get update -y
+    - apt-get -y install rsync
+    - rsync -zvhr -auv -e "ssh -i $PRIVATE_KEY" build/ ubuntu@$SERVER_IP:tablaFranchise/website/build/
+    - rsync -zvhr -auv -e "ssh -i $PRIVATE_KEY" public/ ubuntu@$SERVER_IP:tablaFranchise/website/public/
+    - rsync -zvhr -auv -e "ssh -i $PRIVATE_KEY" next.config.ts ubuntu@$SERVER_IP:tablaFranchise/website/
+    - rsync -zvhr -auv -e "ssh -i $PRIVATE_KEY" package.json ubuntu@$SERVER_IP:tablaFranchise/website/
+    - rsync -zvhr -auv -e "ssh -i $PRIVATE_KEY" package-lock.json ubuntu@$SERVER_IP:tablaFranchise/website/
+
+    - ssh -i $PRIVATE_KEY ubuntu@$SERVER_IP  'cd /home/ubuntu/tablaFranchise/website; npm i; pm2 reload 10;'
+  only: ["main"]

@@ -1,0 +1,16 @@
+.nav-link{
+    font-size: 18px;
+}
+.header-position{
+    left: 50%;
+    transform: translateX(-50%);
+}
+.header-area{
+    background-color: #fff;
+}
+.header-text{
+    color: #333;
+    &:hover{
+        color: #830005;
+    }
+}

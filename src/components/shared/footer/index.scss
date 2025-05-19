@@ -1,0 +1,19 @@
+
+.footer-top-img {
+    position: absolute;
+    top: -74px;
+    height: 74px;
+    width: 100%;
+    background-position: 100% 100%;
+    background-repeat: repeat;
+}
+.footer-social{
+    background-color: #213d14;
+    &:hover{
+        background-color: #830005;
+    }
+}
+
+.footer-menu-links{
+    column-count: 2;
+}
